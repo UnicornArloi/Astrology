@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1500" height="500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="50%" style="stop-color:#16213e"/>
+      <stop offset="100%" style="stop-color:#0f3460"/>
+    </linearGradient>
+    <linearGradient id="starGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700"/>
+      <stop offset="100%" style="stop-color:#ff6b6b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffd700;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#ffd700;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- 背景 -->
+  <rect width="1500" height="500" fill="url(#bgGrad)"/>
+  
+  <!-- 中心光晕 -->
+  <ellipse cx="750" cy="250" rx="600" ry="300" fill="url(#glow)"/>
+  
+  <!-- 装饰边框 -->
+  <rect x="50" y="50" width="1400" height="400" fill="none" stroke="#ffd700" stroke-width="2" opacity="0.3" rx="20"/>
+  <rect x="70" y="70" width="1360" height="360" fill="none" stroke="#8b6914" stroke-width="1" opacity="0.5" rx="15"/>
+  
+  <!-- 左边装饰 -->
+  <g opacity="0.4">
+    <circle cx="100" cy="100" r="40" fill="none" stroke="#ffd700" stroke-width="1"/>
+    <circle cx="100" cy="100" r="30" fill="none" stroke="#ffd700" stroke-width="0.5"/>
+    <circle cx="100" cy="400" r="40" fill="none" stroke="#ffd700" stroke-width="1"/>
+    <circle cx="100" cy="400" r="30" fill="none" stroke="#ffd700" stroke-width="0.5"/>
+  </g>
+  
+  <!-- 右边装饰 -->
+  <g opacity="0.4">
+    <circle cx="1400" cy="100" r="40" fill="none" stroke="#ffd700" stroke-width="1"/>
+    <circle cx="1400" cy="100" r="30" fill="none" stroke="#ffd700" stroke-width="0.5"/>
+    <circle cx="1400" cy="400" r="40" fill="none" stroke="#ffd700" stroke-width="1"/>
+    <circle cx="1400" cy="400" r="30" fill="none" stroke="#ffd700" stroke-width="0.5"/>
+  </g>
+  
+  <!-- 主标题 -->
+  <text x="750" y="200" text-anchor="middle" font-family="Georgia, serif" font-size="72" font-weight="bold" fill="url(#starGrad)">
+    Zodiac Fortune
+  </text>
+  
+  <!-- 副标题英文 -->
+  <text x="750" y="260" text-anchor="middle" font-family="Georgia, serif" font-size="28" fill="#e8d5b8" opacity="0.8">
+    Blockchain Zodiac Fortune NFT Protocol
+  </text>
+  
+  <!-- 中央星星 -->
+  <g transform="translate(750, 360)">
+    <polygon points="0,-70 18,-22 68,-22 26,8 42,58 0,30 -42,58 -26,8 -68,-22 -18,-22" fill="#ffd700"/>
+  </g>
+  
+  <!-- 底部装饰 -->
+  <text x="750" y="450" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#8b6914" opacity="0.6">
+    The Stars Reveal Your Destiny
+  </text>
+  
+  <!-- 小星星装饰 -->
+  <g fill="#ffd700" opacity="0.3">
+    <circle cx="200" cy="300" r="2"/>
+    <circle cx="300" cy="150" r="1.5"/>
+    <circle cx="400" cy="350" r="2"/>
+    <circle cx="1100" cy="150" r="2"/>
+    <circle cx="1200" cy="350" r="1.5"/>
+    <circle cx="1300" cy="300" r="2"/>
+  </g>
+</svg>

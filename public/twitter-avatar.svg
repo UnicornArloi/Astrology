@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#0f3460"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffd700;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#ffd700;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- 背景 -->
+  <rect width="400" height="400" fill="url(#bgGrad)"/>
+  
+  <!-- 外圈 -->
+  <circle cx="200" cy="200" r="190" fill="none" stroke="#ffd700" stroke-width="4"/>
+  <circle cx="200" cy="200" r="180" fill="none" stroke="#ffd700" stroke-width="2" opacity="0.5"/>
+  
+  <!-- 内圈装饰 -->
+  <circle cx="200" cy="200" r="150" fill="none" stroke="#8b6914" stroke-width="1" opacity="0.3"/>
+  <circle cx="200" cy="200" r="120" fill="none" stroke="#8b6914" stroke-width="1" opacity="0.2"/>
+  
+  <!-- 光芒 -->
+  <g opacity="0.4">
+    <line x1="200" y1="20" x2="200" y2="50" stroke="#ffd700" stroke-width="2"/>
+    <line x1="200" y1="350" x2="200" y2="380" stroke="#ffd700" stroke-width="2"/>
+    <line x1="20" y1="200" x2="50" y2="200" stroke="#ffd700" stroke-width="2"/>
+    <line x1="350" y1="200" x2="380" y2="200" stroke="#ffd700" stroke-width="2"/>
+    <line x1="72" y1="72" x2="95" y2="95" stroke="#ffd700" stroke-width="1.5"/>
+    <line x1="328" y1="72" x2="305" y2="95" stroke="#ffd700" stroke-width="1.5"/>
+    <line x1="72" y1="328" x2="95" y2="305" stroke="#ffd700" stroke-width="1.5"/>
+    <line x1="328" y1="328" x2="305" y2="305" stroke="#ffd700" stroke-width="1.5"/>
+  </g>
+  
+  <!-- 中央星星 -->
+  <g transform="translate(200, 200)">
+    <polygon points="0,-80 20,-25 78,-25 30,10 48,65 0,35 -48,65 -30,10 -78,-25 -20,-25" fill="#ffd700"/>
+    <polygon points="0,-50 12,-15 48,-15 18,5 28,40 0,20 -28,40 -18,5 -48,-15 -12,-15" fill="#1a1a2e"/>
+    <polygon points="0,-50 12,-15 48,-15 18,5 28,40 0,20 -28,40 -18,5 -48,-15 -12,-15" fill="none" stroke="#ffd700" stroke-width="1"/>
+  </g>
+  
+  <!-- 装饰圆点 -->
+  <circle cx="200" cy="80" r="3" fill="#ffd700" opacity="0.6"/>
+  <circle cx="200" cy="320" r="3" fill="#ffd700" opacity="0.6"/>
+  <circle cx="80" cy="200" r="3" fill="#ffd700" opacity="0.6"/>
+  <circle cx="320" cy="200" r="3" fill="#ffd700" opacity="0.6"/>
+</svg>
