@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { ethers } from 'ethers'
+import { ethers } from 'ethers'
 import './index.css'
 
 // 合约配置
@@ -135,7 +136,31 @@ function App() {
           }
         })
         
-        // 更新统计
+        
+
+  // 页面加载时查询奖池（无需连接钱包）
+  useEffect(() => {
+    const fetchJackpot = async () => {
+      try {
+        const provider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/")
+        const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider)
+        const jackpot = await contract.jackpotBalance()
+        const mythicCount = await contract.totalMythicWins()
+        setStats({
+          jackpot: parseFloat(ethers.utils.formatEther(jackpot)),
+          mythicCount: mythicCount.toNumber(),
+          totalCast: 0
+        })
+      } catch (e) {
+        console.log('查询奖池失败（无需钱包）:', e.message)
+      }
+    }
+    fetchJackpot()
+    const interval = setInterval(fetchJackpot, 10000) // 每10秒刷新
+    return () => clearInterval(interval)
+  }, [])
+
+  // 更新统计
         await updateStats(contract)
       } catch (error) {
         console.error('连接失败:', error)
