@@ -3,10 +3,10 @@ import { ethers } from 'ethers'
 import './index.css'
 
 // 合约配置
-const CONTRACT_ADDRESS = "0x55E2cd974f72e9b4e67f0dA3EfC410821B037329"
+const CONTRACT_ADDRESS = "0x327225E60E01CADa18eA51ed73D69E57204C597E"
 
 const CONTRACT_ABI = [
-  "function requestCast() external payable returns (uint256 castId)",
+  "function cast(uint8 zodiac) external payable returns (uint8 rank)",
   "function casts(uint256 castId) external view returns (address user, uint40 time, bool minted, bool ready, uint8 rarity, uint8 luck, uint16 id, uint8[6] lines)",
   "function mint(uint256 castId) external returns (uint256 tokenId)",
   "function nextCastId() external view returns (uint256)",
@@ -97,6 +97,33 @@ function App() {
         const signer = provider.getSigner()
         const account = await signer.getAddress()
         
+        // 检查并切换到 BSC 网络
+        try {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x38' }], // BSC Mainnet
+          })
+        } catch (switchError) {
+          // 如果 BSC 网络不存在，添加它
+          if (switchError.code === 4902) {
+            try {
+              await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                  chainId: '0x38',
+                  chainName: 'BNB Smart Chain',
+                  rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                  blockExplorerUrls: ['https://bscscan.com/'],
+                  nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 }
+                }]
+              })
+            } catch (addError) {
+              console.error('添加网络失败:', addError)
+              alert('请手动添加 BNB Smart Chain 网络')
+            }
+          }
+        }
+        
         const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider)
         
         setProvider(provider)
@@ -161,25 +188,58 @@ function App() {
       return
     }
     
+    console.log('=== 开始抽签测试 ===')
+    console.log('1. 合约地址:', CONTRACT_ADDRESS)
+    console.log('2. 账户:', account)
+    console.log('3. 签名者:', signer ? '已连接' : '未连接')
+    console.log('4. 合约:', contract ? '已初始化' : '未初始化')
+    
+    if (!contract || !signer) {
+      alert('合约未初始化，请重新连接钱包！')
+      return
+    }
+    
+    // 获取星座索引
+    const zodiacKeys = Object.keys(zodiacData)
+    const zodiacIndex = zodiacKeys.indexOf(selectedZodiac)
+    
     setIsConsulting(true)
     setResult(null)
     
     try {
+      console.log('5. 准备发送交易...')
+      console.log('6. 星座索引:', zodiacIndex, selectedZodiac)
       const contractWithSigner = contract.connect(signer)
-      const tx = await contractWithSigner.requestCast({ 
+      
+      const tx = await contractWithSigner.cast(zodiacIndex, { 
         value: ethers.utils.parseEther("0.002") 
       })
-      await tx.wait()
+      console.log('7. 交易已发送，Hash:', tx.hash)
       
-      // 监听事件
-      contract.on("CastReady", (castIdVal, rarity, id, luck) => {
-        setResult({ luck, rank: rarity })
-        setCastId(castIdVal.toNumber())
-        setIsConsulting(false)
+      const receipt = await tx.wait()
+      console.log('8. 交易已确认!', receipt.status === 1 ? '成功' : '失败')
+      
+      // 解析事件获取 rank
+      const castEvent = receipt.logs.find(log => {
+        try {
+          return log.topics[0] === ethers.utils.id("Cast(address,uint8,uint8)")
+        } catch { return false }
       })
+      
+      let rank = 0
+      if (castEvent) {
+        rank = parseInt(castEvent.topics[3], 16)
+        console.log('9. 抽中稀有度:', rank)
+      }
+      
+      // 显示结果
+      setResult({ luck: 50 + rank * 10, rank: rank })
+      setIsConsulting(false)
+      alert(`占卜成功！稀有度: ${rankNames[rank]}`)
+      
     } catch (error) {
-      console.error('抽签失败:', error)
-      alert('抽签失败: ' + error.message)
+      console.error('❌ 抽签失败:', error)
+      alert('抽签失败: ' + (error.reason || error.message || error.code || '未知错误'))
       setIsConsulting(false)
     }
   }
