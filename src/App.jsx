@@ -270,7 +270,7 @@ function App() {
           <div className="symbol">✧</div>
           <h1>星盘占卜</h1>
           <p>星辰为你揭示命运</p>
-          <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+          <div style={{position: 'absolute', top: '10px', right: '15px', display: 'flex', gap: '8px', alignItems: 'center'}}>
             <button 
               className="wallet-btn" 
               onClick={toggleBgm}
@@ -357,7 +357,7 @@ function App() {
                   </svg>
                 </div>
               </div>
-              <p className="wheel-cost">占卜费用: <span>0.002 BNB</span></p>
+              <p className="wheel-cost" style={{marginTop: '10px'}}>占卜费用: <span>0.002 BNB</span></p>
             </div>
             
             <div className="card stats-section">
