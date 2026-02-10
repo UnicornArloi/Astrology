@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import './index.css'
 
 // 合约配置
-const CONTRACT_ADDRESS = "0x327225E60E01CADa18eA51ed73D69E57204C597E"
+const CONTRACT_ADDRESS = "0x7639245FF477B10c3D7DDc0dEE1F32ee351D670c"
 
 const CONTRACT_ABI = [
   "function cast(uint8 zodiac) external payable returns (uint8 rank)",
