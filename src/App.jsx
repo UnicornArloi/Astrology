@@ -33,7 +33,6 @@ const rankNames = ['普通', '稀有', '史诗', '传奇', '神话']
 const rankEmojis = ['✨', '💎', '🔮', '👑', '🌟']
 const rankColors = ['#8B7355', '#4A90D9', '#9B59B6', '#F39C12', '#E74C3C']
 
-// 随机预言
 const fortunes = [
   "星星指引你今日会遇到意外的惊喜，保持开放的心态。",
   "宇宙的能量与你同在，今天适合做出重要的决定。",
@@ -78,6 +77,19 @@ const playSound = (type, rank = null) => {
       gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4)
       osc.start(audioCtx.currentTime)
       osc.stop(audioCtx.currentTime + 0.4)
+    }
+    else if (type === 'reveal') {
+      // 揭晓音效：叮~叮~ 两声
+      for (let i = 0; i < 2; i++) {
+        const osc = audioCtx.createOscillator()
+        osc.type = 'sine'
+        osc.connect(gainNode)
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime + i * 0.2)
+        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime + i * 0.2)
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.2 + 0.15)
+        osc.start(audioCtx.currentTime + i * 0.2)
+        osc.stop(audioCtx.currentTime + i * 0.2 + 0.15)
+      }
     }
     else if (type === 'result') {
       const freqs = {
@@ -186,10 +198,16 @@ function App() {
         } catch { rank = parseInt(castEvent.data.slice(-2), 16) }
       } else { rank = Math.floor(Math.random() * 5) }
       
-      // 随机选择一段预言
       const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)]
-      setResult({ rank, fortune: randomFortune })
-      playSound('result', rank)
+      
+      // 揭晓结果音效
+      playSound('reveal')
+      
+      setTimeout(() => {
+        setResult({ rank, fortune: randomFortune })
+        playSound('result', rank)
+      }, 400)
+      
       fetchJackpot()
     } catch (error) {
       setDebug('抽签失败: ' + (error.reason || error.message || '未知错误'))
