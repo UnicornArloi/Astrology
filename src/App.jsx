@@ -69,6 +69,15 @@ const rankNames = ['普通', '稀有', '史诗', '传奇', '神话']
 const rankEmojis = ['✨', '💎', '🔮', '👑', '🌟']
 const rankColors = ['#8B7355', '#4A90D9', '#9B59B6', '#F39C12', '#E74C3C']
 
+const RefreshIcon = () => (
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+    <path d="M3 3v5h5"/>
+    <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+    <path d="M16 21h5v-5"/>
+  </svg>
+)
+
 function App() {
   const [account, setAccount] = useState(null)
   const [contract, setContract] = useState(null)
@@ -300,16 +309,18 @@ function App() {
                   onClick={fetchJackpot}
                   style={{
                     marginLeft: '10px',
-                    padding: '5px 10px',
+                    padding: '5px 8px',
                     fontSize: '0.8em',
                     background: '#5c4033',
                     color: '#fff',
                     border: 'none',
                     borderRadius: '5px',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center'
                   }}
                 >
-                  🔄
+                  <RefreshIcon />
                 </button>
               </h2>
               <div className="stats-grid">
