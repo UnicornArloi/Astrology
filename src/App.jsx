@@ -78,7 +78,6 @@ function App() {
   const [jackpot, setJackpot] = useState(0)
   const [mythicCount, setMythicCount] = useState(0)
   const [debug, setDebug] = useState('')
-  const [isRefreshing, setIsRefreshing] = useState(false)
 
   const fetchJackpot = async () => {
     try {
@@ -91,7 +90,6 @@ function App() {
     } catch (e) {
       console.log('查询奖池失败:', e.message)
     }
-    setIsRefreshing(false)
   }
 
   useEffect(() => {
@@ -127,11 +125,6 @@ function App() {
     setResult(null)
   }
 
-  const handleRefresh = () => {
-    setIsRefreshing(true)
-    fetchJackpot()
-  }
-
   const handleConsult = async () => {
     if (!selectedZodiac) {
       setDebug('请先选择星座！')
@@ -159,7 +152,6 @@ function App() {
       const receipt = await tx.wait()
       setDebug('交易已确认!')
       
-      // 解析事件
       let rank = 0
       const castEvent = receipt.logs.find(log => {
         try {
@@ -176,13 +168,11 @@ function App() {
             setDebug('抽中稀有度: ' + rank + ' (' + rankNames[rank] + ')')
           }
         } catch (e) {
-          // 如果解析失败，尝试从 data 获取
           const dataHex = castEvent.data.slice(-2)
           rank = parseInt(dataHex, 16)
           setDebug('抽中稀有度: ' + rank + ' (' + rankNames[rank] + ')')
         }
       } else {
-        setDebug('未找到事件，使用随机值')
         rank = Math.floor(Math.random() * 5)
       }
       
@@ -304,25 +294,7 @@ function App() {
             </div>
             
             <div className="card stats-section">
-              <h2 className="card-title">
-                占卜统计 
-                <button 
-                  onClick={handleRefresh}
-                  disabled={isRefreshing}
-                  style={{
-                    marginLeft: '10px',
-                    padding: '5px 10px',
-                    fontSize: '0.8em',
-                    background: isRefreshing ? '#ccc' : '#5c4033',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: isRefreshing ? 'not-allowed' : 'pointer'
-                  }}
-                >
-                  {isRefreshing ? '刷新中...' : '🔄 刷新'}
-                </button>
-              </h2>
+              <h2 className="card-title">占卜统计</h2>
               <div className="stats-grid">
                 <div className="stat-item">
                   <div className="stat-value">{jackpot.toFixed(2)}</div>
