@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 import { ethers } from 'ethers'
-import { ethers } from 'ethers'
 import './index.css'
 
 // 合约配置
