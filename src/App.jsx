@@ -78,22 +78,25 @@ function App() {
   const [jackpot, setJackpot] = useState(0)
   const [mythicCount, setMythicCount] = useState(0)
   const [debug, setDebug] = useState('')
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  const fetchJackpot = async () => {
+    try {
+      const provider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/")
+      const c = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider)
+      const j = await c.jackpotBalance()
+      const m = await c.totalMythicWins()
+      setJackpot(parseFloat(ethers.utils.formatEther(j)))
+      setMythicCount(m.toNumber())
+    } catch (e) {
+      console.log('查询奖池失败:', e.message)
+    }
+    setIsRefreshing(false)
+  }
 
   useEffect(() => {
-    const fetchJackpot = async () => {
-      try {
-        const provider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/")
-        const c = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider)
-        const j = await c.jackpotBalance()
-        const m = await c.totalMythicWins()
-        setJackpot(parseFloat(ethers.utils.formatEther(j)))
-        setMythicCount(m.toNumber())
-      } catch (e) {
-        console.log('查询奖池失败:', e.message)
-      }
-    }
     fetchJackpot()
-    const interval = setInterval(fetchJackpot, 10000)
+    const interval = setInterval(fetchJackpot, 5000) // 每5秒刷新
     return () => clearInterval(interval)
   }, [])
 
@@ -122,6 +125,11 @@ function App() {
   const handleSelectZodiac = (zodiac) => {
     setSelectedZodiac(zodiac)
     setResult(null)
+  }
+
+  const handleRefresh = () => {
+    setIsRefreshing(true)
+    fetchJackpot()
   }
 
   const handleConsult = async () => {
@@ -165,9 +173,7 @@ function App() {
       }
       
       setResult({ rank })
-      
-      const j = await contract.jackpotBalance()
-      setJackpot(parseFloat(ethers.utils.formatEther(j)))
+      fetchJackpot()
       
     } catch (error) {
       console.error('抽签失败:', error)
@@ -284,7 +290,25 @@ function App() {
             </div>
             
             <div className="card stats-section">
-              <h2 className="card-title">占卜统计</h2>
+              <h2 className="card-title">
+                占卜统计 
+                <button 
+                  onClick={handleRefresh}
+                  disabled={isRefreshing}
+                  style={{
+                    marginLeft: '10px',
+                    padding: '5px 10px',
+                    fontSize: '0.8em',
+                    background: isRefreshing ? '#ccc' : '#5c4033',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: isRefreshing ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  {isRefreshing ? '刷新中...' : '🔄 刷新'}
+                </button>
+              </h2>
               <div className="stats-grid">
                 <div className="stat-item">
                   <div className="stat-value">{jackpot.toFixed(2)}</div>
