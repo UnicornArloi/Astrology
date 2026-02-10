@@ -456,3 +456,172 @@ body {
     gap: 6px;
   }
 }
+
+/* 稀有度卡片动画 */
+.rank-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+  padding: 20px 25px;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  animation: rankAppear 0.6s ease-out;
+}
+
+@keyframes rankAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  50% {
+    transform: scale(1.05) translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.rank-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.rank-emoji {
+  font-size: 3em;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.rank-info {
+  text-align: left;
+  position: relative;
+  z-index: 1;
+}
+
+.rank-name {
+  font-size: 1.6em;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.rank-desc {
+  font-size: 0.85em;
+  color: #5c4033;
+  font-style: italic;
+  margin-top: 5px;
+}
+
+/* 神话级特殊动画 */
+.rank-4 {
+  animation: mythicAppear 0.8s ease-out, shimmer 2s infinite;
+}
+
+.rank-4 .rank-emoji {
+  animation: mythicPulse 1s infinite;
+}
+
+@keyframes mythicAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) rotate(-10deg);
+    filter: blur(10px);
+  }
+  50% {
+    transform: scale(1.2) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes mythicPulse {
+  0%, 100% { 
+    transform: scale(1);
+    filter: drop-shadow(0 0 15px #FFD700);
+  }
+  50% { 
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 25px #FFD700);
+  }
+}
+
+.rank-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(ellipse, rgba(255,215,0,0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* 神话奖励动画 */
+.mythic-reward {
+  margin-top: 20px;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.2) 0%, rgba(255, 107, 107, 0.2) 100%);
+  border: 2px solid #E74C3C;
+  border-radius: 10px;
+  color: #E74C3C;
+  font-weight: bold;
+  font-size: 1.1em;
+  animation: rewardBounce 0.6s ease-out;
+  letter-spacing: 2px;
+}
+
+@keyframes rewardBounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateY(20px);
+  }
+  60% {
+    transform: scale(1.1) translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 星星粒子效果 */
+.star-particle {
+  position: fixed;
+  pointer-events: none;
+  animation: starFloat 3s linear forwards;
+  opacity: 0.8;
+}
+
+@keyframes starFloat {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}

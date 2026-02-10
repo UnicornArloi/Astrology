@@ -15,6 +15,15 @@ const CONTRACT_ABI = [
   "event MythicWin(address indexed user, uint256 amount)"
 ]
 
+
+const rankConfig = {
+  0: { name: '普通', emoji: '✨', color: '#8B7355', bg: 'linear-gradient(135deg, #8B7355 0%, #A0826D 100%)', desc: '命运的平凡馈赠' },
+  1: { name: '稀有', emoji: '💎', color: '#4A90D9', bg: 'linear-gradient(135deg, #4A90D9 0%, #6BB3F0 100%)', desc: '命运藏匿的珍宝' },
+  2: { name: '史诗', emoji: '🔮', color: '#9B59B6', bg: 'linear-gradient(135deg, #9B59B6 0%, #BE7DD8 100%)', desc: '命运的珍贵馈赠' },
+  3: { name: '传奇', emoji: '👑', color: '#F39C12', bg: 'linear-gradient(135deg, #F39C12 0%, #F1C40F 100%)', desc: '命运的最高眷顾' },
+  4: { name: '神话', emoji: '🌟', color: '#E74C3C', bg: 'linear-gradient(135deg, #E74C3C 0%, #FF6B6B 100%)', desc: '命运的终极启示' }
+}
+
 // 星座数据
 const zodiacData = {
   aries: { 
@@ -67,8 +76,8 @@ const zodiacData = {
   }
 }
 
-const rankNames = ['普通', '稀有', '史诗', '传奇', '神话']
-const rankClasses = ['rank-common', 'rank-rare', 'rank-epic', 'rank-legendary', 'rank-mythic']
+// rankNames 已移至 rankConfig
+// rankClasses 已移至 rankConfig
 
 function App() {
   const [provider, setProvider] = useState(null)
@@ -260,7 +269,9 @@ function App() {
       // 显示结果
       setResult({ luck: 50 + rank * 10, rank: rank })
       setIsConsulting(false)
-      alert(`占卜成功！稀有度: ${rankNames[rank]}`)
+      // 显示结果（不用 alert）
+      setResult({ luck: 50 + rank * 10, rank: rank })
+      setIsConsulting(false)
       
     } catch (error) {
       console.error('❌ 抽签失败:', error)
@@ -354,12 +365,20 @@ function App() {
                     </div>
                   </div>
                   
-                  <div className="rank-row">
-                    <span>✧</span>
-                    <span className={`rank-text ${rankClasses[result.rank]}`}>
-                      {rankNames[result.rank]}
-                    </span>
+                  <div className="rank-card rank-${result.rank}">
+                    <div className="rank-emoji">{rankConfig[result.rank].emoji}</div>
+                    <div className="rank-info">
+                      <div className="rank-name" style={{color: rankConfig[result.rank].color}}>{rankConfig[result.rank].name}</div>
+                      <div className="rank-desc">{rankConfig[result.rank].desc}</div>
+                    </div>
+                    <div className="rank-glow"></div>
                   </div>
+
+                  {result.rank === 4 && (
+                    <div className="mythic-reward">
+                      🎉 获得奖池 50% 代币奖励！
+                    </div>
+                  )}
                   
                   {result.rank > 0 && (
                     <button 
