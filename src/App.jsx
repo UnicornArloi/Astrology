@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import './index.css'
 
@@ -50,43 +50,6 @@ const fortunes = [
   "今天适合与朋友相聚，友谊将带给你力量。",
   "倾听自己内心的声音，它会引导你走向成功。"
 ]
-
-// 背景音乐播放器
-let bgmOscillators = []
-let bgmGainNode = null
-let isBgmPlaying = false
-
-const startBgm = () => {
-  if (isBgmPlaying) return
-  try {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
-    bgmGainNode = audioCtx.createGain()
-    bgmGainNode.connect(audioCtx.destination)
-    bgmGainNode.gain.setValueAtTime(0.03, audioCtx.currentTime)
-    
-    // 创建三个低频振荡器制造神秘氛围
-    const freqs = [110, 164.81, 196] // A2, E3, G3 和弦
-    freqs.forEach((freq, i) => {
-      const osc = audioCtx.createOscillator()
-      osc.type = 'sine'
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime)
-      osc.connect(bgmGainNode)
-      osc.start(audioCtx.currentTime)
-      bgmOscillators.push(osc)
-    })
-    
-    isBgmPlaying = true
-  } catch (e) {}
-}
-
-const stopBgm = () => {
-  bgmOscillators.forEach(osc => {
-    try { osc.stop() } catch {}
-  })
-  bgmOscillators = []
-  bgmGainNode = null
-  isBgmPlaying = false
-}
 
 const playSound = (type, rank = null) => {
   try {
@@ -159,7 +122,6 @@ function App() {
   const [jackpot, setJackpot] = useState(0)
   const [mythicCount, setMythicCount] = useState(0)
   const [debug, setDebug] = useState('')
-  const [bgmEnabled, setBgmEnabled] = useState(false)
 
   const fetchJackpot = async () => {
     try {
@@ -175,21 +137,8 @@ function App() {
   useEffect(() => {
     fetchJackpot()
     const interval = setInterval(fetchJackpot, 5000)
-    return () => {
-      clearInterval(interval)
-      stopBgm()
-    }
+    return () => clearInterval(interval)
   }, [])
-
-  const toggleBgm = () => {
-    if (bgmEnabled) {
-      stopBgm()
-      setBgmEnabled(false)
-    } else {
-      startBgm()
-      setBgmEnabled(true)
-    }
-  }
 
   const connectWallet = async () => {
     if (window.ethereum) {
@@ -263,25 +212,16 @@ function App() {
   }
 
   return (
-    <div className="app" onClick={() => { if (!bgmEnabled) { startBgm(); setBgmEnabled(true) } }}>
+    <div className="app">
       <div className="overlay"></div>
       <div className="container">
         <header className="header">
           <div className="symbol">✧</div>
           <h1>星盘占卜</h1>
           <p>星辰为你揭示命运</p>
-          <div style={{position: 'absolute', top: '10px', right: '15px', display: 'flex', gap: '8px', alignItems: 'center'}}>
-            <button 
-              className="wallet-btn" 
-              onClick={toggleBgm}
-              style={{background: bgmEnabled ? 'linear-gradient(135deg, #6d4c2d 0%, #4d3520 100%)' : 'linear-gradient(135deg, #5c4033 0%, #3d2914 100%)'}}
-            >
-              {bgmEnabled ? '🔇 音乐关' : '🔊 音乐开'}
-            </button>
-            <button className="wallet-btn" onClick={connectWallet}>
-              {account ? `${account.slice(0,6)}...${account.slice(-4)}` : '连接钱包'}
-            </button>
-          </div>
+          <button className="wallet-btn" onClick={connectWallet} style={{position: 'absolute', top: '15px', right: '15px'}}>
+            {account ? `${account.slice(0,6)}...${account.slice(-4)}` : '连接钱包'}
+          </button>
         </header>
         
         {debug && (
@@ -310,10 +250,7 @@ function App() {
               {!result && !isConsulting && (
                 <div className="result-placeholder">
                   <span className="icon">🌟</span>
-                  <p>点击星座开启占卜</p>
-                  <p style={{fontSize: '0.8em', marginTop: '10px', color: '#8b7355'}}>
-                    {bgmEnabled ? '🔊 背景音乐播放中' : '点击任意位置开启背景音乐'}
-                  </p>
+                  <p>凝视星盘，寻求启示</p>
                 </div>
               )}
               
