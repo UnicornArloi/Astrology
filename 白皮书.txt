@@ -55,7 +55,7 @@ Mythic 是最具价值的 NFT，持有者可获得奖池分红：
 
 ### 智能合约
 
-合约地址：0x14c1d18881d4038A3799a3F47028d148E928bE6F
+合约地址：0xb6D7D4f6250C07fC2B7a86fe39E9f02eB80aF07C
 
 技术栈：
 - Solidity 0.8.24
@@ -156,7 +156,7 @@ Mythic 是最具价值的 NFT，持有者可获得奖池分红：
 ## 联系方式
 
 - 官网：https://astrology-self-five.vercel.app/
-- 合约：https://bscscan.com/address/0x14c1d18881d4038A3799a3F47028d148E928bE6F
+- 合约：https://bscscan.com/address/0xb6D7D4f6250C07fC2B7a86fe39E9f02eB80aF07C
 - GitHub：https://github.com/UnicornArloi/Astrology
 
 ---

@@ -3,19 +3,22 @@ import { ethers } from 'ethers'
 import './index.css'
 
 // 合约配置
-const CONTRACT_ADDRESS = "0xb6D7D4f6250C07fC2B7a86fe39E9f02eB80aF07C"
+const CONTRACT_ADDRESS = "0x55E2cd974f72e9b4e67f0dA3EfC410821B037329"
 
 const CONTRACT_ABI = [
-  "function requestCast() external payable returns (uint256 castId, uint256 requestId)",
-  "function casts(uint256 castId) external view returns (address user, uint40 ts, bool minted, uint8 rarity, bool ready, uint8 luck, uint16 id, uint8[6] lines)",
+  "function requestCast() external payable returns (uint256 castId)",
+  "function casts(uint256 castId) external view returns (address user, uint40 time, bool minted, bool ready, uint8 rarity, uint8 luck, uint16 id, uint8[6] lines)",
   "function mint(uint256 castId) external returns (uint256 tokenId)",
-  "function jackpotBalanceOf() external view returns (uint256)",
-  "function mythicMintedCount() external view returns (uint256)",
   "function nextCastId() external view returns (uint256)",
+  "function nextTokenId() external view returns (uint256)",
   "function castFee() external view returns (uint256)",
-  "event CastRequested(uint256 indexed castId, address indexed user, uint256 indexed requestId)",
-  "event CastReady(uint256 indexed castId, uint8 rarity, uint16 id, uint8 luck)",
-  "event Minted(uint256 indexed tokenId, uint256 indexed castId, uint8 rarity, address indexed to)"
+  "function mythicMinted() external view returns (uint256)",
+  "function fortuneToken() external view returns (address)",
+  "event CastRequested(uint256 indexed id, address indexed user, uint256 indexed reqId)",
+  "event CastReady(uint256 indexed id, uint8 rarity, uint16 hexId, uint8 luck)",
+  "event Minted(uint256 indexed tokenId, uint256 indexed castId, uint8 rarity, address indexed to)",
+  "event MythicMinted(address indexed to, uint256 indexed tokenId)",
+  "event JackpotPayout(address indexed winner, uint256 amount, uint8 phase)"
 ]
 
 // 星座数据
@@ -126,15 +129,14 @@ function App() {
   // 更新统计
   const updateStats = async (contractInstance) => {
     try {
-      const [totalCast, mythicCount, jackpot] = await Promise.all([
+      const [totalCast, mythicCount] = await Promise.all([
         contractInstance.nextCastId(),
-        contractInstance.mythicMintedCount(),
-        contractInstance.jackpotBalanceOf()
+        contractInstance.mythicMinted()
       ])
       setStats({
         totalCast: totalCast.toNumber(),
         mythicCount: mythicCount.toNumber(),
-        jackpot: parseFloat(ethers.utils.formatEther(jackpot))
+        jackpot: 0 // 需要查询 fortuneToken 合约获取余额
       })
     } catch (error) {
       console.error('更新统计失败:', error)
