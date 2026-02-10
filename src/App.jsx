@@ -209,7 +209,22 @@ function App() {
         <div className="main-content">
           <div className="left-panel">
             <div className="card">
-              <h2 className="card-title">选择你的星座</h2>
+              <h2 className="card-title">
+                <button 
+                  onClick={fetchJackpot}
+                  style={{
+                    marginLeft: '10px',
+                    padding: '5px 10px',
+                    fontSize: '0.8em',
+                    background: '#5c4033',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  🔄
+                </button>选择你的星座</h2>
               <div className="zodiac-grid">
                 {Object.entries(zodiacData).map(([key, data]) => (
                   <button
@@ -294,7 +309,22 @@ function App() {
             </div>
             
             <div className="card stats-section">
-              <h2 className="card-title">占卜统计</h2>
+              <h2 className="card-title">
+                <button 
+                  onClick={fetchJackpot}
+                  style={{
+                    marginLeft: '10px',
+                    padding: '5px 10px',
+                    fontSize: '0.8em',
+                    background: '#5c4033',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  🔄
+                </button>占卜统计</h2>
               <div className="stats-grid">
                 <div className="stat-item">
                   <div className="stat-value">{jackpot.toFixed(2)}</div>
