@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import './index.css'
 
@@ -15,54 +15,18 @@ const CONTRACT_ABI = [
 ]
 
 const zodiacData = {
-  aries: { 
-    emoji: '<svg viewBox="0 0 40 40"><path d="M12 12 Q8 20 12 28 M28 12 Q32 20 28 28 M12 12 L20 20 M28 12 L20 20" fill="none" stroke="#2a1d0f" stroke-width="2.5" stroke-linecap="round"/></svg>', 
-    name: '白羊座' 
-  },
-  taurus: { 
-    emoji: '<svg viewBox="0 0 40 40"><circle cx="20" cy="22" r="10" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M12 14 Q10 10 14 8 M28 14 Q30 10 26 8" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
-    name: '金牛座' 
-  },
-  gemini: { 
-    emoji: '<svg viewBox="0 0 40 40"><path d="M14 12 L14 28 M26 12 L26 28" fill="none" stroke="#2a1d0f" stroke-width="3" stroke-linecap="round"/><circle cx="14" cy="10" r="4" fill="none" stroke="#2a1d0f" stroke-width="2"/><circle cx="26" cy="10" r="4" fill="none" stroke="#2a1d0f" stroke-width="2"/><circle cx="14" cy="30" r="4" fill="none" stroke="#2a1d0f" stroke-width="2"/><circle cx="26" cy="30" r="4" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
-    name: '双子座' 
-  },
-  cancer: { 
-    emoji: '<svg viewBox="0 0 40 40"><path d="M10 20 Q20 28 30 20 Q28 32 20 34 Q12 32 10 20" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M8 12 Q10 8 14 10 M32 12 Q30 8 26 10" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
-    name: '巨蟹座' 
-  },
-  leo: { 
-    emoji: '<svg viewBox="0 0 40 40"><circle cx="20" cy="22" r="12" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M8 14 L12 18 M32 14 L28 18 M6 8 Q4 6 6 4 M34 8 Q36 6 34 4 M14 6 L14 10 M26 6 L26 10" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
-    name: '狮子座' 
-  },
-  virgo: { 
-    emoji: '<svg viewBox="0 0 40 40"><path d="M20 8 L20 32 M12 14 L28 14 M14 24 L26 24" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M16 8 Q20 4 24 8" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
-    name: '处女座' 
-  },
-  libra: { 
-    emoji: '<svg viewBox="0 0 40 40"><path d="M8 14 L32 26 M20 12 L20 28" fill="none" stroke="#2a1d0f" stroke-width="2"/><circle cx="20" cy="10" r="3" fill="#2a1d0f"/></svg>', 
-    name: '天秤座' 
-  },
-  scorpio: { 
-    emoji: '<svg viewBox="0 0 40 40"><path d="M20 6 L20 22 L14 28 L26 34" fill="none" stroke="#2a1d0f" stroke-width="2" stroke-linecap="round"/><path d="M26 34 L32 36 M26 34 L28 40 M26 34 L22 38" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
-    name: '天蝎座' 
-  },
-  sagittarius: { 
-    emoji: '<svg viewBox="0 0 40 40"><path d="M10 28 L30 12 M26 8 L32 6 L30 12 M26 8 L30 4" fill="none" stroke="#2a1d0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>', 
-    name: '射手座' 
-  },
-  capricorn: { 
-    emoji: '<svg viewBox="0 0 40 40"><path d="M12 8 Q20 14 28 8 Q32 16 28 24 Q20 30 12 24 Q8 16 12 8" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M28 8 L32 4 M28 8 L32 12" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
-    name: '摩羯座' 
-  },
-  aquarius: { 
-    emoji: '<svg viewBox="0 0 40 40"><path d="M10 12 Q15 8 20 12 Q25 16 30 12 M10 20 Q15 16 20 20 Q25 24 30 20" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
-    name: '水瓶座' 
-  },
-  pisces: { 
-    emoji: '<svg viewBox="0 0 40 40"><path d="M14 14 Q8 20 14 26 M26 14 Q32 20 26 26 M14 14 L26 26 M14 26 L26 14" fill="none" stroke="#2a1d0f" stroke-width="2" stroke-linecap="round"/></svg>', 
-    name: '双鱼座' 
-  }
+  aries: { emoji: '<svg viewBox="0 0 40 40"><path d="M12 12 Q8 20 12 28 M28 12 Q32 20 28 28 M12 12 L20 20 M28 12 L20 20" fill="none" stroke="#2a1d0f" stroke-width="2.5" stroke-linecap="round"/></svg>', name: '白羊座' },
+  taurus: { emoji: '<svg viewBox="0 0 40 40"><circle cx="20" cy="22" r="10" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M12 14 Q10 10 14 8 M28 14 Q30 10 26 8" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', name: '金牛座' },
+  gemini: { emoji: '<svg viewBox="0 0 40 40"><path d="M14 12 L14 28 M26 12 L26 28" fill="none" stroke="#2a1d0f" stroke-width="3" stroke-linecap="round"/><circle cx="14" cy="10" r="4" fill="none" stroke="#2a1d0f" stroke-width="2"/><circle cx="26" cy="10" r="4" fill="none" stroke="#2a1d0f" stroke-width="2"/><circle cx="14" cy="30" r="4" fill="none" stroke="#2a1d0f" stroke-width="2"/><circle cx="26" cy="30" r="4" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', name: '双子座' },
+  cancer: { emoji: '<svg viewBox="0 0 40 40"><path d="M10 20 Q20 28 30 20 Q28 32 20 34 Q12 32 10 20" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M8 12 Q10 8 14 10 M32 12 Q30 8 26 10" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', name: '巨蟹座' },
+  leo: { emoji: '<svg viewBox="0 0 40 40"><circle cx="20" cy="22" r="12" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M8 14 L12 18 M32 14 L28 18 M6 8 Q4 6 6 4 M34 8 Q36 6 34 4 M14 6 L14 10 M26 6 L26 10" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', name: '狮子座' },
+  virgo: { emoji: '<svg viewBox="0 0 40 40"><path d="M20 8 L20 32 M12 14 L28 14 M14 24 L26 24" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M16 8 Q20 4 24 8" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', name: '处女座' },
+  libra: { emoji: '<svg viewBox="0 0 40 40"><path d="M8 14 L32 26 M20 12 L20 28" fill="none" stroke="#2a1d0f" stroke-width="2"/><circle cx="20" cy="10" r="3" fill="#2a1d0f"/></svg>', name: '天秤座' },
+  scorpio: { emoji: '<svg viewBox="0 0 40 40"><path d="M20 6 L20 22 L14 28 L26 34" fill="none" stroke="#2a1d0f" stroke-width="2" stroke-linecap="round"/><path d="M26 34 L32 36 M26 34 L28 40 M26 34 L22 38" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', name: '天蝎座' },
+  sagittarius: { emoji: '<svg viewBox="0 0 40 40"><path d="M10 28 L30 12 M26 8 L32 6 L30 12 M26 8 L30 4" fill="none" stroke="#2a1d0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>', name: '射手座' },
+  capricorn: { emoji: '<svg viewBox="0 0 40 40"><path d="M12 8 Q20 14 28 8 Q32 16 28 24 Q20 30 12 24 Q8 16 12 8" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M28 8 L32 4 M28 8 L32 12" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', name: '摩羯座' },
+  aquarius: { emoji: '<svg viewBox="0 0 40 40"><path d="M10 12 Q15 8 20 12 Q25 16 30 12 M10 20 Q15 16 20 20 Q25 24 30 20" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', name: '水瓶座' },
+  pisces: { emoji: '<svg viewBox="0 0 40 40"><path d="M14 14 Q8 20 14 26 M26 14 Q32 20 26 26 M14 14 L26 26 M14 26 L26 14" fill="none" stroke="#2a1d0f" stroke-width="2" stroke-linecap="round"/></svg>', name: '双鱼座' }
 }
 
 const rankNames = ['普通', '稀有', '史诗', '传奇', '神话']
@@ -70,35 +34,54 @@ const rankEmojis = ['✨', '💎', '🔮', '👑', '🌟']
 const rankColors = ['#8B7355', '#4A90D9', '#9B59B6', '#F39C12', '#E74C3C']
 
 // 音效函数
-const playSound = (type) => {
+const playSound = (type, rank = null) => {
   try {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
-    const oscillator = audioCtx.createOscillator()
     const gainNode = audioCtx.createGain()
-    
-    oscillator.connect(gainNode)
     gainNode.connect(audioCtx.destination)
+    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime)
     
     if (type === 'select') {
-      oscillator.frequency.setValueAtTime(800, audioCtx.currentTime)
-      oscillator.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1)
-      gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime)
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15)
-      oscillator.start(audioCtx.currentTime)
-      oscillator.stop(audioCtx.currentTime + 0.15)
-    } else if (type === 'mythic') {
-      oscillator.frequency.setValueAtTime(523, audioCtx.currentTime)
-      oscillator.frequency.setValueAtTime(659, audioCtx.currentTime + 0.1)
-      oscillator.frequency.setValueAtTime(784, audioCtx.currentTime + 0.2)
-      oscillator.frequency.setValueAtTime(1047, audioCtx.currentTime + 0.3)
-      gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime)
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5)
-      oscillator.start(audioCtx.currentTime)
-      oscillator.stop(audioCtx.currentTime + 0.5)
+      const osc = audioCtx.createOscillator()
+      osc.connect(gainNode)
+      osc.frequency.setValueAtTime(600, audioCtx.currentTime)
+      osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1)
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12)
+      osc.start(audioCtx.currentTime)
+      osc.stop(audioCtx.currentTime + 0.12)
+    } 
+    else if (type === 'consult') {
+      const osc = audioCtx.createOscillator()
+      osc.type = 'sine'
+      osc.connect(gainNode)
+      osc.frequency.setValueAtTime(300, audioCtx.currentTime)
+      osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.3)
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4)
+      osc.start(audioCtx.currentTime)
+      osc.stop(audioCtx.currentTime + 0.4)
     }
-  } catch (e) {
-    console.log('播放音效失败:', e)
-  }
+    else if (type === 'result') {
+      const freqs = {
+        0: [400, 500],      // 普通
+        1: [500, 600, 700], // 稀有
+        2: [600, 800, 1000], // 史诗
+        3: [523, 659, 784, 1047], // 传奇 (C5 E5 G5 C6)
+        4: [523, 659, 784, 1047, 1319] // 神话 (C5 E5 G5 C6 E6)
+      }
+      const seq = freqs[rank] || freqs[0]
+      seq.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator()
+        osc.type = rank >= 3 ? 'triangle' : 'sine'
+        osc.connect(gainNode)
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.12)
+        const endTime = audioCtx.currentTime + i * 0.12 + 0.15
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime + i * 0.12)
+        gainNode.gain.exponentialRampToValueAtTime(0.01, endTime)
+        osc.start(audioCtx.currentTime + i * 0.12)
+        osc.stop(endTime)
+      })
+    }
+  } catch (e) {}
 }
 
 function App() {
@@ -119,9 +102,7 @@ function App() {
       const m = await c.totalMythicWins()
       setJackpot(parseFloat(ethers.utils.formatEther(j)))
       setMythicCount(m.toNumber())
-    } catch (e) {
-      console.log('查询奖池失败:', e.message)
-    }
+    } catch (e) {}
   }
 
   useEffect(() => {
@@ -137,14 +118,11 @@ function App() {
         await provider.send("eth_requestAccounts", [])
         const signer = provider.getSigner()
         const acc = await signer.getAddress()
-        
         const c = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider)
-        
         setAccount(acc)
         setContract(c)
         setDebug('钱包连接成功: ' + acc.slice(0,6) + '...')
       } catch (error) {
-        console.error('连接失败:', error)
         setDebug('连接失败: ' + (error.reason || error.message))
       }
     } else {
@@ -159,66 +137,42 @@ function App() {
   }
 
   const handleConsult = async () => {
-    if (!selectedZodiac) {
-      setDebug('请先选择星座！')
-      return
-    }
-    if (!account) {
-      setDebug('请先连接钱包！')
-      return
-    }
+    if (!selectedZodiac) { setDebug('请先选择星座！'); return }
+    if (!account) { setDebug('请先连接钱包！'); return }
     
     setIsConsulting(true)
     setResult(null)
+    playSound('consult')
     setDebug('开始抽签...')
     
     try {
       const zodiacKeys = Object.keys(zodiacData)
       const zodiacIndex = zodiacKeys.indexOf(selectedZodiac)
-      
       const signer = contract.provider.getSigner()
-      const tx = await contract.connect(signer).cast(zodiacIndex, { 
-        value: ethers.utils.parseEther("0.002") 
-      })
-      setDebug('交易已发送: ' + tx.hash)
-      
+      const tx = await contract.connect(signer).cast(zodiacIndex, { value: ethers.utils.parseEther("0.002") })
+      setDebug('交易已发送...')
       const receipt = await tx.wait()
-      setDebug('交易已确认!')
+      setDebug('占卜完成！')
       
       let rank = 0
       const castEvent = receipt.logs.find(log => {
-        try {
-          return log.topics[0] === ethers.utils.id("Cast(address,uint8,uint8)")
-        } catch { return false }
+        try { return log.topics[0] === ethers.utils.id("Cast(address,uint8,uint8)") } catch { return false }
       })
       
       if (castEvent && castEvent.data) {
         try {
           const iface = new ethers.utils.Interface(['event Cast(address indexed user, uint8 zodiac, uint8 rank)'])
           const parsed = iface.parseLog(castEvent)
-          if (parsed) {
-            rank = parsed.args.rank.toNumber()
-            setDebug('抽中稀有度: ' + rank + ' (' + rankNames[rank] + ')')
-            if (rank === 4) playSound('mythic')
-          }
-        } catch (e) {
-          const dataHex = castEvent.data.slice(-2)
-          rank = parseInt(dataHex, 16)
-          setDebug('抽中稀有度: ' + rank + ' (' + rankNames[rank] + ')')
-          if (rank === 4) playSound('mythic')
-        }
-      } else {
-        rank = Math.floor(Math.random() * 5)
-      }
+          if (parsed) rank = parsed.args.rank.toNumber()
+        } catch { rank = parseInt(castEvent.data.slice(-2), 16) }
+      } else { rank = Math.floor(Math.random() * 5) }
       
       setResult({ rank })
+      playSound('result', rank)
       fetchJackpot()
-      
     } catch (error) {
-      console.error('抽签失败:', error)
-      setDebug('抽签失败: ' + (error.reason || error.message || error.code || '未知错误'))
+      setDebug('抽签失败: ' + (error.reason || error.message || '未知错误'))
     }
-    
     setIsConsulting(false)
   }
 
@@ -247,13 +201,9 @@ function App() {
               <h2 className="card-title">选择你的星座</h2>
               <div className="zodiac-grid">
                 {Object.entries(zodiacData).map(([key, data]) => (
-                  <button
-                    key={key}
-                    className={`zodiac-btn ${selectedZodiac === key ? 'active' : ''}`}
-                    onClick={() => handleSelectZodiac(key)}
-                    title={data.name}
-                    dangerouslySetInnerHTML={{ __html: data.emoji }}
-                  />
+                  <button key={key} className={`zodiac-btn ${selectedZodiac === key ? 'active' : ''}`}
+                    onClick={() => handleSelectZodiac(key)} title={data.name}
+                    dangerouslySetInnerHTML={{ __html: data.emoji }} />
                 ))}
               </div>
               <p className="chosen-text">
@@ -269,42 +219,22 @@ function App() {
                 </div>
               )}
               
-              {isConsulting && (
-                <div className="loading-spin"></div>
-              )}
+              {isConsulting && <div className="loading-spin"></div>}
               
               {result && (
                 <div className="result-content">
-                  <div 
-                    className="result-symbol" 
-                    dangerouslySetInnerHTML={{ __html: zodiacData[selectedZodiac].emoji }}
-                  />
-                  <h2 className="result-title">
-                    {zodiacData[selectedZodiac].name} · 今日预言
-                  </h2>
+                  <div className="result-symbol" dangerouslySetInnerHTML={{ __html: zodiacData[selectedZodiac].emoji }} />
+                  <h2 className="result-title">{zodiacData[selectedZodiac].name} · 今日预言</h2>
                   
                   <div style={{marginTop: '20px'}}>
                     <div style={{fontSize: '3em'}}>{rankEmojis[result.rank]}</div>
-                    <div style={{
-                      fontSize: '1.8em', 
-                      fontWeight: 'bold',
-                      color: rankColors[result.rank],
-                      marginTop: '10px'
-                    }}>
+                    <div style={{fontSize: '1.8em', fontWeight: 'bold', color: rankColors[result.rank], marginTop: '10px'}}>
                       {rankNames[result.rank]}
                     </div>
                   </div>
                   
                   {result.rank === 4 && jackpot > 0 && (
-                    <div style={{
-                      marginTop: '20px',
-                      padding: '15px',
-                      background: 'linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(255, 107, 107, 0.2))',
-                      border: '2px solid #E74C3C',
-                      borderRadius: '10px',
-                      color: '#E74C3C',
-                      fontWeight: 'bold'
-                    }}>
+                    <div style={{marginTop: '20px', padding: '15px', background: 'linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(255, 107, 107, 0.2))', border: '2px solid #E74C3C', borderRadius: '10px', color: '#E74C3C', fontWeight: 'bold'}}>
                       🎉 获得奖池 50% 代币奖励！
                     </div>
                   )}
@@ -367,9 +297,7 @@ function App() {
           </div>
         </div>
         
-        <footer className="footer">
-          ✦ 星辰与命运 ✦
-        </footer>
+        <footer className="footer">✦ 星辰与命运 ✦</footer>
       </div>
     </div>
   )
