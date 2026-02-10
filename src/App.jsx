@@ -9,6 +9,7 @@ const CONTRACT_ABI = [
   "function jackpotBalance() external view returns (uint256)",
   "function totalMythicWins() external view returns (uint256)",
   "function marketingWallet() external view returns (address)",
+  "function castFee() external view returns (uint256)",
   "event Cast(address indexed user, uint8 zodiac, uint8 rank)",
   "event MythicWin(address indexed user, uint256 amount)"
 ]
@@ -76,6 +77,7 @@ function App() {
   const [result, setResult] = useState(null)
   const [jackpot, setJackpot] = useState(0)
   const [mythicCount, setMythicCount] = useState(0)
+  const [debug, setDebug] = useState('')
 
   useEffect(() => {
     const fetchJackpot = async () => {
@@ -107,12 +109,13 @@ function App() {
         
         setAccount(acc)
         setContract(c)
+        setDebug('钱包连接成功: ' + acc.slice(0,6) + '...')
       } catch (error) {
         console.error('连接失败:', error)
-        alert('连接失败: ' + error.message)
+        setDebug('连接失败: ' + (error.reason || error.message))
       }
     } else {
-      alert('请安装 MetaMask')
+      setDebug('请安装 MetaMask')
     }
   }
 
@@ -123,26 +126,32 @@ function App() {
 
   const handleConsult = async () => {
     if (!selectedZodiac) {
-      alert('请先选择星座！')
+      setDebug('请先选择星座！')
       return
     }
     if (!account) {
-      alert('请先连接钱包！')
+      setDebug('请先连接钱包！')
       return
     }
     
     setIsConsulting(true)
     setResult(null)
+    setDebug('开始抽签...')
     
     try {
       const zodiacKeys = Object.keys(zodiacData)
       const zodiacIndex = zodiacKeys.indexOf(selectedZodiac)
+      setDebug('星座索引: ' + zodiacIndex + ' (' + selectedZodiac + ')')
       
-      const c = contract.connect(window.ethereum.getSigner())
-      const tx = await c.cast(zodiacIndex, { value: ethers.utils.parseEther("0.002") })
-      await tx.wait()
+      const signer = contract.provider.getSigner()
+      const tx = await contract.connect(signer).cast(zodiacIndex, { 
+        value: ethers.utils.parseEther("0.002") 
+      })
+      setDebug('交易已发送: ' + tx.hash)
       
       const receipt = await tx.wait()
+      setDebug('交易已确认!')
+      
       const castEvent = receipt.logs.find(log => {
         try {
           return log.topics[0] === ethers.utils.id("Cast(address,uint8,uint8)")
@@ -152,19 +161,20 @@ function App() {
       let rank = 0
       if (castEvent) {
         rank = parseInt(castEvent.topics[3], 16)
+        setDebug('抽中: ' + rankNames[rank])
       }
       
       setResult({ rank })
-      setIsConsulting(false)
       
       const j = await contract.jackpotBalance()
       setJackpot(parseFloat(ethers.utils.formatEther(j)))
       
     } catch (error) {
       console.error('抽签失败:', error)
-      alert('抽签失败: ' + (error.reason || error.message))
-      setIsConsulting(false)
+      setDebug('抽签失败: ' + (error.reason || error.message || error.code || '未知错误'))
     }
+    
+    setIsConsulting(false)
   }
 
   return (
@@ -179,6 +189,12 @@ function App() {
             {account ? `${account.slice(0,6)}...${account.slice(-4)}` : '连接钱包'}
           </button>
         </header>
+        
+        {debug && (
+          <div style={{textAlign: 'center', padding: '10px', background: '#f0f0f0', borderRadius: '5px', marginBottom: '15px', fontSize: '0.85em', color: '#333'}}>
+            {debug}
+          </div>
+        )}
         
         <div className="main-content">
           <div className="left-panel">
@@ -222,9 +238,9 @@ function App() {
                     {zodiacData[selectedZodiac].name} · 今日预言
                   </h2>
                   
-                  <div className="rank-display" style={{marginTop: '20px'}}>
-                    <div className="rank-emoji" style={{fontSize: '3em'}}>{rankEmojis[result.rank]}</div>
-                    <div className="rank-name" style={{
+                  <div style={{marginTop: '20px'}}>
+                    <div style={{fontSize: '3em'}}>{rankEmojis[result.rank]}</div>
+                    <div style={{
                       fontSize: '1.8em', 
                       fontWeight: 'bold',
                       color: rankColors[result.rank],
@@ -235,7 +251,7 @@ function App() {
                   </div>
                   
                   {result.rank === 4 && jackpot > 0 && (
-                    <div className="mythic-reward" style={{
+                    <div style={{
                       marginTop: '20px',
                       padding: '15px',
                       background: 'linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(255, 107, 107, 0.2))',
