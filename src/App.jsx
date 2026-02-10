@@ -7,18 +7,11 @@ const CONTRACT_ADDRESS = "0x327225E60E01CADa18eA51ed73D69E57204C597E"
 
 const CONTRACT_ABI = [
   "function cast(uint8 zodiac) external payable returns (uint8 rank)",
-  "function casts(uint256 castId) external view returns (address user, uint40 time, bool minted, bool ready, uint8 rarity, uint8 luck, uint16 id, uint8[6] lines)",
-  "function mint(uint256 castId) external returns (uint256 tokenId)",
-  "function nextCastId() external view returns (uint256)",
-  "function nextTokenId() external view returns (uint256)",
-  "function castFee() external view returns (uint256)",
-  "function mythicMinted() external view returns (uint256)",
-  "function fortuneToken() external view returns (address)",
-  "event CastRequested(uint256 indexed id, address indexed user, uint256 indexed reqId)",
-  "event CastReady(uint256 indexed id, uint8 rarity, uint16 hexId, uint8 luck)",
-  "event Minted(uint256 indexed tokenId, uint256 indexed castId, uint8 rarity, address indexed to)",
-  "event MythicMinted(address indexed to, uint256 indexed tokenId)",
-  "event JackpotPayout(address indexed winner, uint256 amount, uint8 phase)"
+  "function jackpotBalance() external view returns (uint256)",
+  "function totalMythicWins() external view returns (uint256)",
+  "function marketingWallet() external view returns (address)",
+  "event Cast(address indexed user, uint8 zodiac, uint8 rank)",
+  "event MythicWin(address indexed user, uint256 amount)"
 ]
 
 // 星座数据
@@ -85,7 +78,7 @@ function App() {
   const [isConsulting, setIsConsulting] = useState(false)
   const [result, setResult] = useState(null)
   const [isMinting, setIsMinting] = useState(false)
-  const [stats, setStats] = useState({ totalCast: 0, mythicCount: 0, jackpot: 0 })
+  const [stats, setStats] = useState({ jackpot: 0, mythicCount: 0, totalCast: 0 })
   const [castId, setCastId] = useState(null)
 
   // 连接钱包
@@ -156,14 +149,14 @@ function App() {
   // 更新统计
   const updateStats = async (contractInstance) => {
     try {
-      const [totalCast, mythicCount] = await Promise.all([
-        contractInstance.nextCastId(),
-        contractInstance.mythicMinted()
+      const [jackpot, mythicCount] = await Promise.all([
+        contractInstance.jackpotBalance(),
+        contractInstance.totalMythicWins()
       ])
       setStats({
-        totalCast: totalCast.toNumber(),
+        jackpot: parseFloat(ethers.utils.formatEther(jackpot)),
         mythicCount: mythicCount.toNumber(),
-        jackpot: 0 // 需要查询 fortuneToken 合约获取余额
+        totalCast: 0 // 新合约不追踪总抽签数
       })
     } catch (error) {
       console.error('更新统计失败:', error)
@@ -369,16 +362,16 @@ function App() {
               <h2 className="card-title">占卜统计</h2>
               <div className="stats-grid">
                 <div className="stat-item">
-                  <div className="stat-value">{stats.totalCast}</div>
-                  <div className="stat-label">已被揭示</div>
+                  <div className="stat-value">{stats.jackpot.toFixed(2)}</div>
+                  <div className="stat-label">奖池 (FORTUNE)</div>
                 </div>
                 <div className="stat-item">
                   <div className="stat-value">{stats.mythicCount}</div>
                   <div className="stat-label">神话级</div>
                 </div>
                 <div className="stat-item">
-                  <div className="stat-value">{stats.jackpot.toFixed(2)}</div>
-                  <div className="stat-label">奖池</div>
+                  <div className="stat-value">{stats.jackpot > 0 ? '50%' : '0%'}</div>
+                  <div className="stat-label">下次奖励</div>
                 </div>
               </div>
               
