@@ -149,17 +149,24 @@ function App() {
   // 更新统计
   const updateStats = async (contractInstance) => {
     try {
-      const [jackpot, mythicCount] = await Promise.all([
-        contractInstance.jackpotBalance(),
-        contractInstance.totalMythicWins()
-      ])
+      console.log('=== 查询奖池 ===')
+      console.log('合约地址:', CONTRACT_ADDRESS)
+      
+      const jackpot = await contractInstance.jackpotBalance()
+      console.log('奖池 (Raw):', jackpot.toString())
+      
+      const mythicCount = await contractInstance.totalMythicWins()
+      console.log('神话次数:', mythicCount.toString())
+      
       setStats({
         jackpot: parseFloat(ethers.utils.formatEther(jackpot)),
         mythicCount: mythicCount.toNumber(),
-        totalCast: 0 // 新合约不追踪总抽签数
+        totalCast: 0
       })
+      console.log('奖池 (FORTUNE):', parseFloat(ethers.utils.formatEther(jackpot)))
     } catch (error) {
       console.error('更新统计失败:', error)
+      console.error('可能是合约 ABI 不匹配')
     }
   }
 
