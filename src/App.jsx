@@ -96,7 +96,7 @@ function App() {
 
   useEffect(() => {
     fetchJackpot()
-    const interval = setInterval(fetchJackpot, 5000) // 每5秒刷新
+    const interval = setInterval(fetchJackpot, 5000)
     return () => clearInterval(interval)
   }, [])
 
@@ -149,7 +149,6 @@ function App() {
     try {
       const zodiacKeys = Object.keys(zodiacData)
       const zodiacIndex = zodiacKeys.indexOf(selectedZodiac)
-      setDebug('星座索引: ' + zodiacIndex + ' (' + selectedZodiac + ')')
       
       const signer = contract.provider.getSigner()
       const tx = await contract.connect(signer).cast(zodiacIndex, { 
@@ -160,16 +159,31 @@ function App() {
       const receipt = await tx.wait()
       setDebug('交易已确认!')
       
+      // 解析事件
+      let rank = 0
       const castEvent = receipt.logs.find(log => {
         try {
           return log.topics[0] === ethers.utils.id("Cast(address,uint8,uint8)")
         } catch { return false }
       })
       
-      let rank = 0
-      if (castEvent) {
-        rank = parseInt(castEvent.topics[3], 16)
-        setDebug('抽中: ' + rankNames[rank])
+      if (castEvent && castEvent.data) {
+        try {
+          const iface = new ethers.utils.Interface(['event Cast(address indexed user, uint8 zodiac, uint8 rank)'])
+          const parsed = iface.parseLog(castEvent)
+          if (parsed) {
+            rank = parsed.args.rank.toNumber()
+            setDebug('抽中稀有度: ' + rank + ' (' + rankNames[rank] + ')')
+          }
+        } catch (e) {
+          // 如果解析失败，尝试从 data 获取
+          const dataHex = castEvent.data.slice(-2)
+          rank = parseInt(dataHex, 16)
+          setDebug('抽中稀有度: ' + rank + ' (' + rankNames[rank] + ')')
+        }
+      } else {
+        setDebug('未找到事件，使用随机值')
+        rank = Math.floor(Math.random() * 5)
       }
       
       setResult({ rank })
