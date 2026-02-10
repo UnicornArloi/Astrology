@@ -14,18 +14,54 @@ const CONTRACT_ABI = [
 ]
 
 const zodiacData = {
-  aries: { name: '白羊座' },
-  taurus: { name: '金牛座' },
-  gemini: { name: '双子座' },
-  cancer: { name: '巨蟹座' },
-  leo: { name: '狮子座' },
-  virgo: { name: '处女座' },
-  libra: { name: '天秤座' },
-  scorpio: { name: '天蝎座' },
-  sagittarius: { name: '射手座' },
-  capricorn: { name: '摩羯座' },
-  aquarius: { name: '水瓶座' },
-  pisces: { name: '双鱼座' }
+  aries: { 
+    emoji: '<svg viewBox="0 0 40 40"><path d="M12 12 Q8 20 12 28 M28 12 Q32 20 28 28 M12 12 L20 20 M28 12 L20 20" fill="none" stroke="#2a1d0f" stroke-width="2.5" stroke-linecap="round"/></svg>', 
+    name: '白羊座' 
+  },
+  taurus: { 
+    emoji: '<svg viewBox="0 0 40 40"><circle cx="20" cy="22" r="10" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M12 14 Q10 10 14 8 M28 14 Q30 10 26 8" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
+    name: '金牛座' 
+  },
+  gemini: { 
+    emoji: '<svg viewBox="0 0 40 40"><path d="M14 12 L14 28 M26 12 L26 28" fill="none" stroke="#2a1d0f" stroke-width="3" stroke-linecap="round"/><circle cx="14" cy="10" r="4" fill="none" stroke="#2a1d0f" stroke-width="2"/><circle cx="26" cy="10" r="4" fill="none" stroke="#2a1d0f" stroke-width="2"/><circle cx="14" cy="30" r="4" fill="none" stroke="#2a1d0f" stroke-width="2"/><circle cx="26" cy="30" r="4" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
+    name: '双子座' 
+  },
+  cancer: { 
+    emoji: '<svg viewBox="0 0 40 40"><path d="M10 20 Q20 28 30 20 Q28 32 20 34 Q12 32 10 20" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M8 12 Q10 8 14 10 M32 12 Q30 8 26 10" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
+    name: '巨蟹座' 
+  },
+  leo: { 
+    emoji: '<svg viewBox="0 0 40 40"><circle cx="20" cy="22" r="12" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M8 14 L12 18 M32 14 L28 18 M6 8 Q4 6 6 4 M34 8 Q36 6 34 4 M14 6 L14 10 M26 6 L26 10" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
+    name: '狮子座' 
+  },
+  virgo: { 
+    emoji: '<svg viewBox="0 0 40 40"><path d="M20 8 L20 32 M12 14 L28 14 M14 24 L26 24" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M16 8 Q20 4 24 8" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
+    name: '处女座' 
+  },
+  libra: { 
+    emoji: '<svg viewBox="0 0 40 40"><path d="M8 14 L32 26 M20 12 L20 28" fill="none" stroke="#2a1d0f" stroke-width="2"/><circle cx="20" cy="10" r="3" fill="#2a1d0f"/></svg>', 
+    name: '天秤座' 
+  },
+  scorpio: { 
+    emoji: '<svg viewBox="0 0 40 40"><path d="M20 6 L20 22 L14 28 L26 34" fill="none" stroke="#2a1d0f" stroke-width="2" stroke-linecap="round"/><path d="M26 34 L32 36 M26 34 L28 40 M26 34 L22 38" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
+    name: '天蝎座' 
+  },
+  sagittarius: { 
+    emoji: '<svg viewBox="0 0 40 40"><path d="M10 28 L30 12 M26 8 L32 6 L30 12 M26 8 L30 4" fill="none" stroke="#2a1d0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>', 
+    name: '射手座' 
+  },
+  capricorn: { 
+    emoji: '<svg viewBox="0 0 40 40"><path d="M12 8 Q20 14 28 8 Q32 16 28 24 Q20 30 12 24 Q8 16 12 8" fill="none" stroke="#2a1d0f" stroke-width="2"/><path d="M28 8 L32 4 M28 8 L32 12" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
+    name: '摩羯座' 
+  },
+  aquarius: { 
+    emoji: '<svg viewBox="0 0 40 40"><path d="M10 12 Q15 8 20 12 Q25 16 30 12 M10 20 Q15 16 20 20 Q25 24 30 20" fill="none" stroke="#2a1d0f" stroke-width="2"/></svg>', 
+    name: '水瓶座' 
+  },
+  pisces: { 
+    emoji: '<svg viewBox="0 0 40 40"><path d="M14 14 Q8 20 14 26 M26 14 Q32 20 26 26 M14 14 L26 26 M14 26 L26 14" fill="none" stroke="#2a1d0f" stroke-width="2" stroke-linecap="round"/></svg>', 
+    name: '双鱼座' 
+  }
 }
 
 const rankNames = ['普通', '稀有', '史诗', '传奇', '神话']
@@ -41,7 +77,6 @@ function App() {
   const [jackpot, setJackpot] = useState(0)
   const [mythicCount, setMythicCount] = useState(0)
 
-  // 加载时查询奖池
   useEffect(() => {
     const fetchJackpot = async () => {
       try {
@@ -107,7 +142,6 @@ function App() {
       const tx = await c.cast(zodiacIndex, { value: ethers.utils.parseEther("0.002") })
       await tx.wait()
       
-      // 解析事件
       const receipt = await tx.wait()
       const castEvent = receipt.logs.find(log => {
         try {
@@ -123,7 +157,6 @@ function App() {
       setResult({ rank })
       setIsConsulting(false)
       
-      // 刷新奖池
       const j = await contract.jackpotBalance()
       setJackpot(parseFloat(ethers.utils.formatEther(j)))
       
@@ -158,12 +191,8 @@ function App() {
                     className={`zodiac-btn ${selectedZodiac === key ? 'active' : ''}`}
                     onClick={() => handleSelectZodiac(key)}
                     title={data.name}
-                  >
-                    {key === 'aries' ? '♈' : key === 'taurus' ? '♉' : key === 'gemini' ? '♊' : 
-                     key === 'cancer' ? '♋' : key === 'leo' ? '♌' : key === 'virgo' ? '♍' :
-                     key === 'libra' ? '♎' : key === 'scorpio' ? '♏' : key === 'sagittarius' ? '♐' :
-                     key === 'capricorn' ? '♑' : key === 'aquarius' ? '♒' : key === 'pisces' ? '♓' : '✦'}
-                  </button>
+                    dangerouslySetInnerHTML={{ __html: data.emoji }}
+                  />
                 ))}
               </div>
               <p className="chosen-text">
@@ -185,8 +214,12 @@ function App() {
               
               {result && (
                 <div className="result-content">
+                  <div 
+                    className="result-symbol" 
+                    dangerouslySetInnerHTML={{ __html: zodiacData[selectedZodiac].emoji }}
+                  />
                   <h2 className="result-title">
-                    {selectedZodiac ? zodiacData[selectedZodiac].name : ''} · 今日预言
+                    {zodiacData[selectedZodiac].name} · 今日预言
                   </h2>
                   
                   <div className="rank-display" style={{marginTop: '20px'}}>
