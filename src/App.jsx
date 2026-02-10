@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { ethers } from 'ethers'
 import './index.css'
 
@@ -69,6 +69,38 @@ const rankNames = ['普通', '稀有', '史诗', '传奇', '神话']
 const rankEmojis = ['✨', '💎', '🔮', '👑', '🌟']
 const rankColors = ['#8B7355', '#4A90D9', '#9B59B6', '#F39C12', '#E74C3C']
 
+// 音效函数
+const playSound = (type) => {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+    const oscillator = audioCtx.createOscillator()
+    const gainNode = audioCtx.createGain()
+    
+    oscillator.connect(gainNode)
+    gainNode.connect(audioCtx.destination)
+    
+    if (type === 'select') {
+      oscillator.frequency.setValueAtTime(800, audioCtx.currentTime)
+      oscillator.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1)
+      gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime)
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15)
+      oscillator.start(audioCtx.currentTime)
+      oscillator.stop(audioCtx.currentTime + 0.15)
+    } else if (type === 'mythic') {
+      oscillator.frequency.setValueAtTime(523, audioCtx.currentTime)
+      oscillator.frequency.setValueAtTime(659, audioCtx.currentTime + 0.1)
+      oscillator.frequency.setValueAtTime(784, audioCtx.currentTime + 0.2)
+      oscillator.frequency.setValueAtTime(1047, audioCtx.currentTime + 0.3)
+      gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime)
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5)
+      oscillator.start(audioCtx.currentTime)
+      oscillator.stop(audioCtx.currentTime + 0.5)
+    }
+  } catch (e) {
+    console.log('播放音效失败:', e)
+  }
+}
+
 function App() {
   const [account, setAccount] = useState(null)
   const [contract, setContract] = useState(null)
@@ -123,6 +155,7 @@ function App() {
   const handleSelectZodiac = (zodiac) => {
     setSelectedZodiac(zodiac)
     setResult(null)
+    playSound('select')
   }
 
   const handleConsult = async () => {
@@ -166,11 +199,13 @@ function App() {
           if (parsed) {
             rank = parsed.args.rank.toNumber()
             setDebug('抽中稀有度: ' + rank + ' (' + rankNames[rank] + ')')
+            if (rank === 4) playSound('mythic')
           }
         } catch (e) {
           const dataHex = castEvent.data.slice(-2)
           rank = parseInt(dataHex, 16)
           setDebug('抽中稀有度: ' + rank + ' (' + rankNames[rank] + ')')
+          if (rank === 4) playSound('mythic')
         }
       } else {
         rank = Math.floor(Math.random() * 5)
