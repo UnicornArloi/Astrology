@@ -226,7 +226,7 @@ function App() {
               </p>
             </div>
             
-            <div className="card result-section">
+            <div className="card result-section" style={{background: 'transparent', border: '1px solid rgba(92, 64, 51, 0.15)'}}>
               {!result && !isConsulting && (
                 <div className="result-placeholder">
                   <span className="icon">🌟</span>
