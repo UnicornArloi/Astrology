@@ -625,3 +625,43 @@ body {
     opacity: 0;
   }
 }
+
+/* 结果显示框样式 */
+.result-section {
+  text-align: center;
+  min-height: 220px;
+  background: rgba(139, 105, 20, 0.08);
+  border-radius: 10px;
+  border: 1px solid rgba(92, 64, 51, 0.15);
+}
+
+.result-placeholder {
+  color: #5c4033;
+  font-style: italic;
+  padding: 40px 20px;
+}
+
+.result-placeholder .icon {
+  font-size: 2em;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.result-content {
+  display: block;
+  background: transparent;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.result-symbol {
+  font-size: 3.5em;
+  margin-bottom: 8px;
+}
+
+.result-title {
+  font-size: 1.3em;
+  color: #2a1d0f;
+  margin-bottom: 15px;
+  font-weight: normal;
+}
