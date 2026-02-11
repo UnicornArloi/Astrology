@@ -119,25 +119,18 @@ function App() {
   const [selectedZodiac, setSelectedZodiac] = useState(null)
   const [isConsulting, setIsConsulting] = useState(false)
   const [result, setResult] = useState(null)
-  const [jackpot, setJackpot] = useState(0)
+  const [jackpot, setJackpot] = useState(100000000)
   const [mythicCount, setMythicCount] = useState(0)
   const [debug, setDebug] = useState('')
 
   const fetchJackpot = async () => {
-    try {
-      const provider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/")
-      const c = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider)
-      const j = await c.jackpotBalance()
-      const m = await c.totalMythicWins()
-      setJackpot(parseFloat(ethers.utils.formatEther(j)))
-      setMythicCount(m.toNumber())
-    } catch (e) {}
+    // 假数据：固定显示 100000000
+    setJackpot(100000000)
+    setMythicCount(0)
   }
 
   useEffect(() => {
     fetchJackpot()
-    const interval = setInterval(fetchJackpot, 5000)
-    return () => clearInterval(interval)
   }, [])
 
   const connectWallet = async () => {
@@ -301,7 +294,7 @@ function App() {
               <h2 className="card-title">占卜统计</h2>
               <div className="stats-grid">
                 <div className="stat-item">
-                  <div className="stat-value">{jackpot.toFixed(2)}</div>
+                  <div className="stat-value">{jackpot.toLocaleString()}</div>
                   <div className="stat-label">奖池 (FORTUNE)</div>
                 </div>
                 <div className="stat-item">
