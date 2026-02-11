@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import './index.css'
 
-const CONTRACT_ADDRESS = "0x7639245FF477B10c3D7DDc0dEE1F32ee351D670c"
+const CONTRACT_ADDRESS = "0x3372eaCB4b935D30e4d8aE4278d7EaE3371a87A3"
 
 const CONTRACT_ABI = [
   "function cast(uint8 zodiac) external payable returns (uint8 rank)",
